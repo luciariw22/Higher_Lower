@@ -1,3 +1,38 @@
+import math
+
+
+def yes_no(question):
+    valid = False
+    while not valid:
+        response = input("Have you played this game "
+                         "before? ").lower()
+
+        if response == "yes" or response == "y":
+            response = "yes"
+            return response
+
+        elif response == "no" or response == "n":
+            response = "no"
+            return response
+        else:
+            print("Please answer yes / no")
+
+
+def instructions():
+    print("**** Welcome to the Higher Lower Game ****")
+    print()
+    print("For each game you will be asked to...\n"
+          "- Enter a 'low and 'high number. The computer will randomly\n"
+          "generate a 'secret number between your two chosen numbers. It\n"
+          "will use these numbers for all rounds in a given game.\n"
+          "- The computer will calculate how many guesses you are allowed\n"
+          "- enter the number or rounds you want to play"
+          "- guess the secret number")
+    print()
+    print("Good Luck !")
+    print()
+
+
 def int_check(question, low=None, high=None, exit_code=None):
     if low is None and high is None:
         error = "Please enter an integer"
@@ -17,7 +52,7 @@ def int_check(question, low=None, high=None, exit_code=None):
         try:
             response = int(response)
 
-            # check that integer is valid (ie: not too low / too hig etc)
+            # check that integer is valid (ie: not too low / too high etc)
             if situation == "any integer":
                 return response
 
@@ -36,6 +71,15 @@ def int_check(question, low=None, high=None, exit_code=None):
 
 
 # main routine goes here
+
+show_instructions = yes_no("have you played the "
+                           "game before? ")
+
+if show_instructions == "no":
+    instructions()
+else:
+    print("Program Continues")
+
 
 rounds_played = 0
 rounds_won = 0
@@ -88,7 +132,70 @@ while end_game == "no":
     if rounds_played >= rounds:
         break
 
+# HL component 5 - no duplicates
 
+# To Do
+# set up empty list called already_guessed
+# when user guesses, add guess to list
+# for each guess, check that number is not in already_guessed
+
+# HL component 5 - Prevents duplicate guesses
+
+SECRET = 7
+GUESSES_ALLOWED = 5
+
+already_guessed = []
+guesses_left = GUESSES_ALLOWED
+num_won = 0
+
+guess = ""
+
+while guess != SECRET and guesses_left >= 1:
+
+    guess = int(input("Guess: "))
+
+    # checks that guess is not a duplicate
+    if guess in already_guessed:
+        print("You already guessed that number! Please try again.")
+        continue
+
+        guesses_left -= 1
+        already_guessed.append(guess)
+
+        if guesses_left >= 1:
+
+            if guess < SECRET:
+                print("Too low, try a higher number. Guesses left:", guesses_left)
+            elif guess > SECRET:
+                print("Too high, try a lower number. Guesses left:", guesses_left)
+        else:
+            if guess < SECRET:
+                print("Too low!")
+            elif guess > SECRET:
+                print("Too high!")
+
+if guess == SECRET:
+    if guesses_left == GUESSES_ALLOWED:
+        print("Amazing! You got it!")
+    else:
+        print("Well done, you got it!")
+
+# HL component 11 - Maximum Guesses Calculator
+
+import math
+
+for item in range(0,4):     # loop component for east testing...
+
+    low = int(input("Low: "))   # use int check in due course
+    high = int(input("High: ")) # use int check in due course
+
+    range = high - low + 1
+    max_raw = math.log2(range) # finds maximum # of guesses
+    max_upped = math.ceil(max_raw)
+    max_guesses = max_upped + 1
+    print("Max Guesses: {}".format(max_guesses))
+
+    print()
 
 
 
