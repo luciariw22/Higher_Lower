@@ -1,11 +1,11 @@
-import math
+import random
 
 
+# Functions go here
 def yes_no(question):
     valid = False
     while not valid:
-        response = input("Have you played this game "
-                         "before? ").lower()
+        response = input(question).lower()
 
         if response == "yes" or response == "y":
             response = "yes"
@@ -37,7 +37,7 @@ def int_check(question, low=None, high=None, exit_code=None):
     if low is None and high is None:
         error = "Please enter an integer"
         situation = "any integer"
-    if low is not None and high is not None:
+    elif low is not None and high is not None:
         error = f"Please enter an integer between {low} and {high}"
         situation = "both"
     else:
@@ -55,11 +55,9 @@ def int_check(question, low=None, high=None, exit_code=None):
             # check that integer is valid (ie: not too low / too high etc)
             if situation == "any integer":
                 return response
-
             elif situation == "both":
                 if low <= response <= high:
                     return response
-
             elif situation == "low only":
                 if response >= low:
                     return response
@@ -80,7 +78,6 @@ if show_instructions == "no":
 else:
     print("Program Continues")
 
-
 rounds_played = 0
 rounds_won = 0
 
@@ -99,6 +96,11 @@ if rounds == "":
 end_game = "no"
 while end_game == "no":
 
+    already_guessed = []
+    guesses_allowed = 10
+
+    guesses_left = guesses_allowed
+
     if mode == "infinite":
         heading = f"Round {rounds_played + 1} (infinite mode)"
         rounds += 1
@@ -108,11 +110,12 @@ while end_game == "no":
     print(heading)
 
     rounds_played += 1
+    secret = random.randint(low_number, high_number)
 
     # Start Round!!
     while True:
 
-        secret = 7
+        print("spoiler alert: ", secret)
 
         guess = int_check("Guess (or 'xxx' to exit): ", low_number, high_number, "xxx")
         print("you guessed", guess)
@@ -121,82 +124,33 @@ while end_game == "no":
             end_game = "yes"
             break
 
-            # compare guess to secret number
-        print("Pretend we've compared")
+        if guess in already_guessed:
+            print("You already guessed that number! Please try again."
+                  "You *still* have {} guesses left".format(guesses_left))
+            continue
+
+        guesses_left -= 1
+        already_guessed.append(guess)
+
+        # compare guess to secret number
+        if guesses_left >= 1:
+
+            if guess < secret:
+                print("Too low, try a higher number/ Guesses left: ")
+
+            elif guess > secret:
+                print("Too high, try a lower number. Guesses left: ")
+        else:
+            if guess < secret:
+                print("Too low!")
+            elif guess > secret:
+                print("Too high!")
 
         if guess == secret:
             rounds_won += 1
+            print("you got it")
             break
 
     # check if we are out of rounds
     if rounds_played >= rounds:
         break
-
-# HL component 5 - no duplicates
-
-# To Do
-# set up empty list called already_guessed
-# when user guesses, add guess to list
-# for each guess, check that number is not in already_guessed
-
-# HL component 5 - Prevents duplicate guesses
-
-SECRET = 7
-GUESSES_ALLOWED = 5
-
-already_guessed = []
-guesses_left = GUESSES_ALLOWED
-num_won = 0
-
-guess = ""
-
-while guess != SECRET and guesses_left >= 1:
-
-    guess = int(input("Guess: "))
-
-    # checks that guess is not a duplicate
-    if guess in already_guessed:
-        print("You already guessed that number! Please try again.")
-        continue
-
-        guesses_left -= 1
-        already_guessed.append(guess)
-
-        if guesses_left >= 1:
-
-            if guess < SECRET:
-                print("Too low, try a higher number. Guesses left:", guesses_left)
-            elif guess > SECRET:
-                print("Too high, try a lower number. Guesses left:", guesses_left)
-        else:
-            if guess < SECRET:
-                print("Too low!")
-            elif guess > SECRET:
-                print("Too high!")
-
-if guess == SECRET:
-    if guesses_left == GUESSES_ALLOWED:
-        print("Amazing! You got it!")
-    else:
-        print("Well done, you got it!")
-
-# HL component 11 - Maximum Guesses Calculator
-
-import math
-
-for item in range(0,4):     # loop component for east testing...
-
-    low = int(input("Low: "))   # use int check in due course
-    high = int(input("High: ")) # use int check in due course
-
-    range = high - low + 1
-    max_raw = math.log2(range) # finds maximum # of guesses
-    max_upped = math.ceil(max_raw)
-    max_guesses = max_upped + 1
-    print("Max Guesses: {}".format(max_guesses))
-
-    print()
-
-
-
-
